@@ -1,0 +1,66 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8" />
+	<title>Biblioteca</title>
+	<link href='https://fonts.googleapis.com/css?family=Armata' rel='stylesheet' type='text/css' />
+	<link rel='stylesheet' href='{% static 'biblioteca/css/detail-book.css' %}' type='text/css' />
+</head>
+<body>
+	<h1>Biblioteca</h1>
+	<nav id="menu">
+		<a href="{% url "home" %}">INICIO</a>
+		<a href="{% url "biblioteca" %}">BIBLIOTECA</a>
+		<a href="{% url "hemeroteca" %}">HEMEROTECA</a>
+	</nav>
+	
+    <form action="" id="form-search-book">
+		<span>Realiza una búsqueda solo con el nombre del libro</span><br />
+        <input type="text" name="book-name" placeholder="Nombre del libro" />
+        <input type="submit" value="Buscar" />
+    </form>
+	<section id="container">
+        <div class="book">
+			<h3>{{ libro.titulo }}</h3>
+			<div class="card-book">
+	            <figure class="img-book">
+	            	<img src="{{ libro.imagen.url }}" alt="{{ libro.titulo }}" />
+	            </figure>
+	            <div class="data-book">
+	            	<p><span>Autor</span>{{ libro.autor }}</p>
+	            	<p><span>Biografía</span><a href="{{ libro.autor.biografia }}" target="_blank">{{ libro.autor.biografia }}</a></p>
+	            	<p><span>Editorial</span>{{ libro.editorial }}</p>
+					<p><span>Año de publicación</span>{{ libro.fechaPublicacion }}</p>
+					<p>Ver Libro<button><a href="{% url "pdf_view" %}" target="_blank">{{ libro.pdf }}</a></button></p>
+	            	{% if libro.estado = True %}
+	            	<p><span>Disponible</span>Si</p>
+	            	{% else %}
+	            	<p><span>Disponible</span>No</p>
+					{% endif%}
+				
+	            </div>
+	            {% if not user.is_authenticated %}
+					<p>Inicia sesión para poder reservar el libro</p>
+			    {% else %}
+			    	{% if estudent.prestamos = False %}
+				    	{% if estudent.reservas = False %}
+				    		{% if libro.estado = True %}
+			            	<a href="{% url 'reserva' libro.id user.id %}" class="reservar">Reservar</a>
+			            	{% endif%}
+		            	{% endif%}
+	            	{% endif%}
+			    {% endif %}
+			</div>
+			{% if reserva.reserva %}
+			<div class="cod-res">
+				<p>Tienes 2 dias para presentarte en la biblioteca antes de que el código expire</p>
+				<span>{{ reserva.reserva }}</span>
+			</div>       	
+			{% endif%}
+        </div>
+	</section>
+	<footer id="footer"></footer>
+</body>
+</html>

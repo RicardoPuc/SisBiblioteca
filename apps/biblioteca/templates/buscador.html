@@ -1,0 +1,46 @@
+
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8" />
+	<title>Biblioteca</title>
+	<link href='https://fonts.googleapis.com/css?family=Armata' rel='stylesheet' type='text/css' />
+	<link rel='stylesheet' href='{% static 'biblioteca/css/library.css' %}' type='text/css' />
+</head>
+<body>
+	
+	<h1>BIBLIOTECA</h1>
+	<nav id="menu">
+		<a href="{% url "home" %}">INICIO</a>
+		<a href="{% url "biblioteca" %}">BIBLIOTECA</a>
+		<a href="{% url "hemeroteca" %}">HEMEROTECA</a>
+	</nav>
+	
+    <form action="{% url 'buscador' %}" id="form-search-book" method="GET">
+		<span>Realiza una búsqueda solo con el nombre del libro</span><br />
+        <input type="text" name="q" placeholder="Nombre del libro" value="{{ query|escape }}"/>
+        <input type="submit" value="Buscar" />
+    </form>
+	
+      <h1>CONSULTA DE LIBRO</h1>
+ 
+      {% if query %}
+        <h2>RESULTADOS PARA : "{{ query|escape }}"</h2>
+    
+        {% if results %}
+          <ul>
+          {% for book in results %}
+            <li><a href="{% url "pdf_view" %}">{{ book|escape }}</a></l1>
+          {% endfor %}
+          </ul>
+        {% else %}
+          <p>LIBRO NO DISPONIBLE</p>
+        {% endif %}
+      {% endif %}
+	
+	
+	
+</body>
+</html>
